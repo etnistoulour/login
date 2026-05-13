@@ -81,6 +81,7 @@
 function login() {
   const username = encodeURIComponent(document.getElementById("username").value);
   const password = encodeURIComponent(document.getElementById("password").value);
+  const device = encodeURIComponent(navigator.userAgent);
 
   const loginBtn = document.getElementById("loginBtn");
   const loadingMsg = document.getElementById("loadingMsg");
@@ -95,40 +96,50 @@ function login() {
   }
 
   const apiUrl =
-    "https://script.google.com/macros/s/AKfycbyTb6GjAo28qmQZzehpUsyo2UqBHSdcsj8cZa0Zbffxh3SUhR-Xstos-TXlCFWhRuw/exec" +
+    "https://script.google.com/macros/s/AKfycbw4__FkvkEpa2UoOAvv-ihD5UnVZGnS-8aWjc4qIhFvwXm3S0epsdup97wlAWyQMw/exec" +
     "?username=" + username +
-    "&password=" + password;
+    "&password=" + password +
+    "&device=" + device;
 
   fetch(apiUrl)
-    .then(response => response.json())
-    .then(data => {
-      if (data.status) {
-        if (loadingMsg) {
-          loadingMsg.innerHTML = "✅ Login berhasil...";
-        }
-        window.location.href = data.url;
-      } else {
-        if (loadingMsg) loadingMsg.style.display = "none";
-        if (errorMsg) errorMsg.style.display = "block";
+  .then(response => response.json())
+  .then(data => {
 
-        if (loginBtn) {
-          loginBtn.disabled = false;
-          loginBtn.innerHTML = "Login";
-        }
-      }
-    })
-    .catch(error => {
-      console.error(error);
-
-      if (loadingMsg) loadingMsg.style.display = "none";
-
-      if (loginBtn) {
-        loginBtn.disabled = false;
-        loginBtn.innerHTML = "Login";
+    if (data.status) {
+      if (loadingMsg) {
+        loadingMsg.innerHTML = "✅ Login berhasil...";
       }
 
-      alert("Gagal terhubung ke server");
-    });
+      window.location.href = data.url;
+      return;
+    }
+
+    if (loadingMsg) loadingMsg.style.display = "none";
+
+    if (data.blocked) {
+      alert("⛔ Terlalu banyak percobaan gagal.\nCoba lagi dalam 5 menit.");
+    } else {
+      if (errorMsg) errorMsg.style.display = "block";
+    }
+
+    if (loginBtn) {
+      loginBtn.disabled = false;
+      loginBtn.innerHTML = "Login";
+    }
+
+  })
+  .catch(error => {
+    console.error(error);
+
+    if (loadingMsg) loadingMsg.style.display = "none";
+
+    if (loginBtn) {
+      loginBtn.disabled = false;
+      loginBtn.innerHTML = "Login";
+    }
+
+    alert("Gagal terhubung ke server");
+  });
 }
 </script>
 
