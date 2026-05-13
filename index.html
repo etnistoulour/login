@@ -86,14 +86,16 @@ function login() {
   const loadingMsg = document.getElementById("loadingMsg");
   const errorMsg = document.getElementById("errorMsg");
 
-  errorMsg.style.display = "none";
-  loadingMsg.style.display = "block";
+  if (errorMsg) errorMsg.style.display = "none";
+  if (loadingMsg) loadingMsg.style.display = "block";
 
-  loginBtn.disabled = true;
-  loginBtn.innerHTML = "Memproses...";
+  if (loginBtn) {
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = "Memproses...";
+  }
 
   const apiUrl =
-    "https://script.google.com/macros/s/AKfycbzQ7T16y1Yv0b8voS9_V_U6z1X7ZdwMHIzQ5im_fLmetVr3Bx_zhnEsWRnKqxV_bw/exec" +
+    "https://script.google.com/macros/s/AKfycbzZT02LnT8L8xgckSrcfZc3J0RVGTxJ9pePonbHK7P8eLMkw04CbdzS3JXzMBAR0EM/exec" +
     "?username=" + username +
     "&password=" + password;
 
@@ -101,21 +103,31 @@ function login() {
     .then(response => response.json())
     .then(data => {
       if (data.status) {
-        loadingMsg.innerHTML = "✅ Login berhasil, membuka halaman...";
+        if (loadingMsg) {
+          loadingMsg.innerHTML = "✅ Login berhasil...";
+        }
         window.location.href = data.url;
       } else {
-        loadingMsg.style.display = "none";
-        errorMsg.style.display = "block";
-        loginBtn.disabled = false;
-        loginBtn.innerHTML = "Login";
+        if (loadingMsg) loadingMsg.style.display = "none";
+        if (errorMsg) errorMsg.style.display = "block";
+
+        if (loginBtn) {
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = "Login";
+        }
       }
     })
     .catch(error => {
       console.error(error);
-      loadingMsg.style.display = "none";
+
+      if (loadingMsg) loadingMsg.style.display = "none";
+
+      if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = "Login";
+      }
+
       alert("Gagal terhubung ke server");
-      loginBtn.disabled = false;
-      loginBtn.innerHTML = "Login";
     });
 }
 </script>
