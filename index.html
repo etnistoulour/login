@@ -82,6 +82,16 @@ function login() {
   const username = encodeURIComponent(document.getElementById("username").value);
   const password = encodeURIComponent(document.getElementById("password").value);
 
+  const loginBtn = document.getElementById("loginBtn");
+  const loadingMsg = document.getElementById("loadingMsg");
+  const errorMsg = document.getElementById("errorMsg");
+
+  errorMsg.style.display = "none";
+  loadingMsg.style.display = "block";
+
+  loginBtn.disabled = true;
+  loginBtn.innerHTML = "Memproses...";
+
   const apiUrl =
     "https://script.google.com/macros/s/AKfycbzZT02LnT8L8xgckSrcfZc3J0RVGTxJ9pePonbHK7P8eLMkw04CbdzS3JXzMBAR0EM/exec" +
     "?username=" + username +
@@ -91,14 +101,21 @@ function login() {
     .then(response => response.json())
     .then(data => {
       if (data.status) {
+        loadingMsg.innerHTML = "✅ Login berhasil, membuka halaman...";
         window.location.href = data.url;
       } else {
-        document.getElementById("errorMsg").style.display = "block";
+        loadingMsg.style.display = "none";
+        errorMsg.style.display = "block";
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = "Login";
       }
     })
     .catch(error => {
       console.error(error);
+      loadingMsg.style.display = "none";
       alert("Gagal terhubung ke server");
+      loginBtn.disabled = false;
+      loginBtn.innerHTML = "Login";
     });
 }
 </script>
