@@ -68,13 +68,17 @@
   <h2>Login Khusus Pengurus Etnis Toulour</h2>
 
   <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
+<input type="password" id="password" placeholder="Password">
 
-  <button onclick="login()">Login</button>
+<button id="loginBtn" onclick="login()">Login</button>
 
-  <div class="error" id="errorMsg">
-    Username atau password salah
-  </div>
+<div id="loadingMsg" style="display:none; margin-top:12px; color:#3498db;">
+  ⏳ Memproses login...
+</div>
+
+<div class="error" id="errorMsg">
+  Username atau password salah
+</div>
 </div>
 
 <script>
