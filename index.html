@@ -87,7 +87,19 @@ function login() {
     "?username=" + username +
     "&password=" + password;
 
-  window.location.href = apiUrl;
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data.status) {
+        window.location.href = data.url;
+      } else {
+        document.getElementById("errorMsg").style.display = "block";
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      alert("Gagal terhubung ke server");
+    });
 }
 </script>
 
